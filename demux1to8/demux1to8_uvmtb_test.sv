@@ -10,4 +10,13 @@ class demux_base_test extends uvm_test;
     env = demux_env::type_id::create("env", this);
   endfunction
 
+  function void run_phase(uvm_phase phase);
+    demux_base_sequence seq;
+
+    seq = demux_base_sequence::type_id::create("seq");
+    fork
+      seq.start(env.agent.sequencer);
+    join
+  endfunction
+
 endclass
