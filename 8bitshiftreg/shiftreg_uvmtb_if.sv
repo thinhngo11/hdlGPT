@@ -36,4 +36,28 @@ interface loadable_shift_register_if(input logic clk);
     always @(posedge clk) begin
         prev_data_out <= data_out;
     end
+        
+    // Cover Assertions
+
+    // Cover #1: When reset is high, data_out should be 0.
+    property cp_reset;
+        @(posedge clk)
+        reset |-> data_out === 8'b0;
+    endproperty
+    c_reset : cover property(cp_reset);
+
+    // Cover #2: When load is high, data_out should be updated to data_in on the next clock cycle.
+    property cp_load;
+        @(posedge clk)
+        load |=> data_out === data_in;
+    endproperty
+    c_load : cover property(cp_load);
+
+    // Cover #3: When load is low, data_out should be shifted right with shift_in as msb on the next clock cycle.
+    property cp_shift;
+        @(posedge clk)
+        (!load) |=> data_out === {shift_in, prev_data_out[7:1]};
+    endproperty
+    c_shift : cover property(cp_shift);
+        
 endinterface
