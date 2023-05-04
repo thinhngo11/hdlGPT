@@ -42,7 +42,8 @@ module fifo_tb_top;
     );
 
     initial begin
-        uvm_config_db #(virtual fifo_if)::set(null, "*", "vif", vif);
-        run_test("fifo_test");
+    uvm_config_db #(virtual fifo_if)::set(null, "*", "vif", vif);
+    uvm_config_db #(virtual fifo_if)::set(null, "*.monitor", "vif", vif);
+    run_test("fifo_test");
     end
 endmodule
