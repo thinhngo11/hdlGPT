@@ -15,28 +15,10 @@ class loadable_shift_register_test extends uvm_test;
     function void run_phase(uvm_phase phase);
         phase.raise_objection(this, "Starting test");
 
-        fork
-            automatic loadable_shift_register_if intf = env.agent.intf;
-            begin
-                // Stimulus generation
-                repeat (20) begin
-                    #10 intf.reset = 1;
-                    #10 intf.reset = 0;
+        // Start sequence
+        loadable_shift_register_sequence seq = new();
+        seq.start(env.agent.sequencer);
 
-                    // Load data
-                    intf.load = $urandom_range(0, 1);
-                    intf.data_in = $urandom();
-                    intf.shift_in = $urandom_range(0, 1);
-                    #10 intf.load = 0;
-
-                    // Shift right
-                    repeat (8) begin
-                        #10;
-                    end
-                end
-
-                phase.drop_objection(this, "Test completed");
-            end
-        join
+        phase.drop_objection(this, "Test completed");
     endfunction
 endclass
