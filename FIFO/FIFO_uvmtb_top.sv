@@ -41,6 +41,17 @@ module fifo_tb_top;
         .full(full)
     );
 
+    // Instantiate the SVAs
+    fifo_sva sva_inst (
+        .clk(clk),
+        .reset(reset),
+        .wr_en(wr_en),
+        .wr_data(wr_data),
+        .rd_en(rd_en),
+        .rd_data(rd_data),
+        .empty(empty),
+        .full(full)
+    );
     initial begin
     uvm_config_db #(virtual fifo_if)::set(null, "*", "vif", vif);
     uvm_config_db #(virtual fifo_if)::set(null, "*.monitor", "vif", vif);
