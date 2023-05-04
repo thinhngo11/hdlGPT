@@ -1,0 +1,19 @@
+// dff_seq_item.sv
+class dff_seq_item extends uvm_sequence_item;
+  rand bit d;
+  bit q;
+
+  `uvm_object_utils(dff_seq_item)
+
+  function new(string name = "dff_seq_item");
+    super.new(name);
+  endfunction
+
+  function void do_copy(uvm_object rhs);
+    dff_seq_item other;
+    if (!$cast(other, rhs))
+      `uvm_fatal("DFF_SEQ_ITEM", "do_copy failed")
+    d = other.d;
+    q = other.q;
+  endfunction
+endclass
