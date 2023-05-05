@@ -14,16 +14,9 @@ class test extends uvm_test;
     uvm_config_db#(virtual sequence_detector_if)::set(this, "*", "vif", vif);
     my_env = env::type_id::create("my_env", this);
   endfunction
-
+  
   function void run_phase(uvm_phase phase);
-    seq_item item = new();
-    uvm_sequence seq = new();
-
-    for (int i = 0; i < 50; i++) begin
-      item.randomize();
-      seq.start_item(item);
-      seq.finish_item(item);
-      #10;
-    end
+    seq_1011 main_seq = new("main_seq");
+    main_seq.start(agt.sequencer);
   endfunction
 endclass
