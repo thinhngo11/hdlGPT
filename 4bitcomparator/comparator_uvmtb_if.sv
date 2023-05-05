@@ -17,3 +17,10 @@ interface magnitude_comparator_if(input logic clk);
     property p_A_less;
         @(posedge clk) (A_less |=> (A < B));
     endproperty
+    
+ // Assertion checkers
+    a_A_greater: assert property (p_A_greater) else $error("A_greater assertion failed");
+    a_A_equal: assert property (p_A_equal) else $error("A_equal assertion failed");
+    a_A_less: assert property (p_A_less) else $error("A_less assertion failed");
+
+endinterface
