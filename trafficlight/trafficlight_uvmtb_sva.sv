@@ -19,5 +19,17 @@ module traffic_light_controller_sva (
     assert ($rose(north_south[1]) |-> $fell(north_south[1]) && $rose(north_south[0]));
     assert ($rose(east_west[1]) |-> $fell(east_west[1]) && $rose(east_west[0]));
   end
+    
+  // Cover north_south and east_west both being green (should never happen)
+  cover property (@(posedge clk) disable iff (!clk) (north_south[1] === 1'b1 && east_west[1] === 1'b1));
+
+  // Cover north_south and east_west both being red (should never happen)
+  cover property (@(posedge clk) disable iff (!clk) (north_south[0] === 1'b1 && east_west[0] === 1'b1));
+
+  // Cover all possible state transitions
+  cover property (@(posedge clk) disable iff (!clk) ($rose(north_south[1]) && $fell(north_south[0]))); // NORTH -> EAST
+  cover property (@(posedge clk) disable iff (!clk) ($rose(east_west[1]) && $fell(east_west[0]))); // EAST -> SOUTH
+  cover property (@(posedge clk) disable iff (!clk) ($rose(north_south[0]) && $fell(north_south[1]))); // SOUTH -> WEST
+  cover property (@(posedge clk) disable iff (!clk) ($rose(east_west[0]) && $fell(east_west[1]))); // WEST -> NORTH
 
 endmodule
