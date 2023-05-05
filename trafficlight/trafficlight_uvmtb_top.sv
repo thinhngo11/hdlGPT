@@ -1,3 +1,4 @@
+import uvm_pkg::*;
 `include "uvm_macros.svh"
 
 module traffic_light_controller_tb;
@@ -12,6 +13,13 @@ module traffic_light_controller_tb;
   traffic_light_controller uut (
     .clk(clk),
     .reset(reset),
+    .north_south(north_south),
+    .east_west(east_west)
+  );
+
+  // Instantiate the SVA module
+  traffic_light_controller_sva sva (
+    .clk(clk),
     .north_south(north_south),
     .east_west(east_west)
   );
