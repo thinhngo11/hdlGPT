@@ -1,6 +1,9 @@
 class decoder_4to16_agent extends uvm_agent;
     `uvm_component_utils(decoder_4to16_agent)
 
+    decoder_4to16_driver driver;
+    decoder_4to16_monitor monitor;
+    
     // Port
     virtual decoder_4to16_if.tb_mp vif;
 
@@ -14,6 +17,8 @@ class decoder_4to16_agent extends uvm_agent;
         super.build_phase(phase);
         if (!uvm_config_db#(virtual decoder_4to16_if.tb_mp)::get(this, "", "vif", vif))
             `uvm_fatal(get_type_name(), "Virtual interface must be set for decoder_4to16_agent!")
+        driver = decoder_4to16_driver::type_id::create("driver", this);
+        monitor = decoder_4to16_monitor::type_id::create("monitor", this);        
     endfunction
 
     // Run phase
