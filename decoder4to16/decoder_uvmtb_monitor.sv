@@ -27,8 +27,25 @@ class decoder_4to16_monitor extends uvm_monitor;
             item = decoder_4to16_item::type_id::create("item");
             item.sel = vif.sel;
             item.out = vif.out;
+
+            // Assertions
+            assert_out_onehot(item.sel, item.out);
+            assert_out_decoder(item.sel, item.out);
+
             item_port.write(item);
         end
     endtask
+
+    // Assertion: Check if the output is one-hot
+    function void assert_out_onehot(bit [3:0] sel, bit [15:0] out);
+        assert ($onehot(out)) else
+            `uvm_error(get_type_name(), $sformatf("Non-one-hot output: sel = %0b, out = %0b", sel, out))
+    endfunction
+
+    // Assertion: Check if the output correctly corresponds to the selected input
+    function void assert_out_decoder(bit [3:0] sel, bit [15:0] out);
+        assert (out === (1 << sel)) else
+            `uvm_error(get_type_name(), $sformatf("Decoder mismatch: sel = %0b, out = %0b", sel, out))
+    endfunction
 
 endclass
