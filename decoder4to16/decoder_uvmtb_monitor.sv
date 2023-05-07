@@ -50,6 +50,10 @@ class decoder_4to16_monitor extends uvm_monitor;
             assert_out_onehot(item.sel, item.out);
             assert_out_decoder(item.sel, item.out);
 
+            // Cover assertions
+            cover_out_onehot(item.sel, item.out);
+            cover_out_decoder(item.sel, item.out);
+            
            // Coverage: Sample
             decoder_cg.sample(item.sel);
             
@@ -69,4 +73,14 @@ class decoder_4to16_monitor extends uvm_monitor;
             `uvm_error(get_type_name(), $sformatf("Decoder mismatch: sel = %0b, out = %0b", sel, out))
     endfunction
 
+   // Cover assertion: Check when the output is one-hot
+    function void cover_out_onehot(bit [3:0] sel, bit [15:0] out);
+        cover ($onehot(out));
+    endfunction
+
+    // Cover assertion: Check when the output correctly corresponds to the selected input
+    function void cover_out_decoder(bit [3:0] sel, bit [15:0] out);
+        cover (out === (1 << sel));
+    endfunction
+    
 endclass
