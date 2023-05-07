@@ -5,6 +5,24 @@ class decoder_4to16_monitor extends uvm_monitor;
     uvm_analysis_port #(decoder_4to16_item) item_port;
     virtual decoder_4to16_if.tb_mp vif;
 
+    // Coverage: Covergroup
+    covergroup decoder_cov_cg (input bit [3:0] sel);
+        option.per_instance = 1;
+        option.name = "decoder_cov_cg";
+
+        sel_cp: coverpoint sel {
+            bins sel_bins[16] = (0 => 15);
+        }
+
+        out_cp: coverpoint (1 << sel) {
+            bins out_bins[16] = (1 => 15, 1<<15);
+        }
+
+        sel_out_cross: cross sel_cp, out_cp;
+    endgroup
+
+    decoder_cov_cg decoder_cg;
+    
     // Constructor
     function new(string name = "decoder_4to16_monitor", uvm_component parent);
         super.new(name, parent);
@@ -32,6 +50,9 @@ class decoder_4to16_monitor extends uvm_monitor;
             assert_out_onehot(item.sel, item.out);
             assert_out_decoder(item.sel, item.out);
 
+           // Coverage: Sample
+            decoder_cg.sample(item.sel);
+            
             item_port.write(item);
         end
     endtask
