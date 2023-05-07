@@ -20,6 +20,7 @@ class decoder_4to16_env extends uvm_env;
     // Connect phase
     function void connect_phase(uvm_phase phase);
         super.connect_phase(phase);
+        agent.seq_item_port.connect(driver.seq_item_port);
+        agent.item_port.connect(scoreboard.item_export);
     endfunction
-
 endclass
