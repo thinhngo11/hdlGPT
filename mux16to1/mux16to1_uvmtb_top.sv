@@ -14,6 +14,13 @@ module top;
     .data_out(data_out)
   );
 
+  // Cover Assertions
+  cover property (@(posedge clk) data_out === data_in[sel])
+    $info("Covered: Output matches the selected input. sel = %0d, data_in = %h, data_out = %b", sel, data_in, data_out);
+
+  cover property (@(posedge clk) $past(sel) === sel && $past(data_in) === data_in |-> data_out === $past(data_out))
+    $info("Covered: Output remains stable when inputs and selector signal are stable.");
+
   // SVA
   always @(posedge clk) begin
     assert (data_out === data_in[sel]) else
