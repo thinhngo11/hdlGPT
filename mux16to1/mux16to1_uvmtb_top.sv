@@ -14,6 +14,18 @@ module top;
     .data_out(data_out)
   );
 
+  // SVA
+  always @(posedge clk) begin
+    assert (data_out === data_in[sel]) else
+      $error("Assertion failed: Output does not match the selected input. sel = %0d, data_in = %h, data_out = %b", sel, data_in, data_out);
+  end
+
+  always @(posedge clk) begin
+    if ($past(sel) === sel && $past(data_in) === data_in)
+      assert (data_out === $past(data_out)) else
+        $error("Assertion failed: Output changed while inputs and selector signal were stable.");
+  end
+
   initial begin
     uvm_config_db #(mux_if)::set(null, "uvm_test_top.env", "interface", intf);
     uvm_default_table_printer.knobs.reference = 1;
