@@ -37,6 +37,9 @@ class mux_monitor extends uvm_monitor;
       tr.data_in = intf.data_in;
       tr.data_out = intf.data_out;
       ap.write(tr);
+      
+    // Sample the covergroup
+    cg.sample();      
     end
   endtask
 endclass
