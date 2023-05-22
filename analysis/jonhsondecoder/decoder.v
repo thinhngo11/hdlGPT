@@ -16,11 +16,15 @@ always @(S or En)
     for (J=0; j<N; J=J+1)
       if (S[J})
         Address = Address + 1;
-        Y ='b0;
-        Y[Address] = 'b1;
+    
+    if (S[0])
+        Address = 2*N - Address;
+
+    Y ='b0;
+    Y[Address] = 'b1;
   end
   else if (En == 'b0)
     Y = 'b0;
-else
+  else
     Y ='bx;
 endmodule
