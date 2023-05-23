@@ -1,0 +1,60 @@
+GRADE: 10/10
+update the test bench to include checking
+To update the testbench to include checking, you can add assertions to verify the expected behavior of the Johnson counter. In this example, I will add a checker to make sure that the Johnson counter output has only one bit inverted at each clock cycle. Here's the updated testbench:
+
+```verilog
+module tb;
+parameter WIDTH = 4;
+
+reg clk;
+reg rstn;
+wire [WIDTH-1:0] out;
+wire [WIDTH-1:0] out_prev;
+
+// Function to count the number of bits that are different between a and b
+function integer count_diff_bits;
+  input [WIDTH-1:0] a, b;
+  integer i;
+  integer count;
+  begin
+    count = 0;
+    for (i = 0; i < WIDTH; i = i + 1) begin
+      if (a[i] !== b[i]) begin
+        count = count + 1;
+      end
+    end
+    count_diff_bits = count;
+  end
+endfunction
+
+JC dut (.clk(clk), .rstn(rstn), .out(out));
+
+always #10 clk = ~clk;
+
+initial begin
+  {clk, rstn} <= 0;
+
+  // Initialize out_prev
+  out_prev = 0;
+
+  $monitor ("T=%0t out=%b", $time, out);
+  repeat (2) @(posedge clk);
+  rstn <= 1;
+  repeat (15) @(posedge clk) begin
+    // Check that only one bit is inverted at each clock cycle
+    assert (count_diff_bits(out, out_prev) == 1)
+      else $error("ERROR: More than one bit is inverted at T=%0t", $time);
+
+    // Update out_prev for next comparison
+    out_prev <= out;
+  end
+  $finish;
+end
+endmodule
+```
+
+A new wire 'out_prev' is added to store the previous output value of the Johnson counter. A function 'count_diff_bits' is created 
+to count the number of bits that differ between two input bit vectors. Inside the test sequence, after each positive clock edge, 
+an assertion checks if only one bit is inverted compared to the previous output value. If the assertion fails, an error message is 
+printed with the simulation time. This updated testbench not only simulates the Johnson counter but also checks the expected behavior 
+at each clock cycle.
