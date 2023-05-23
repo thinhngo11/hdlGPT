@@ -1,3 +1,4 @@
+GRADE: 7/10
 debug the verilog code of a Johnson counter below 
 module JC #(parameter WIDTH=4) 
 (
