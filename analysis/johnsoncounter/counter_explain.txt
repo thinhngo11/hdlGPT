@@ -1,3 +1,4 @@
+GRADE: 9/10
 analyze the following verilog for its functionality 
 module JC #(parameter WIDTH=4) 
 (
