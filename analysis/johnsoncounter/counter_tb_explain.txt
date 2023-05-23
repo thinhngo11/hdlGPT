@@ -1,0 +1,47 @@
+GRADE: 10/10
+analyze the following verilog code for its functionality associated with the above Johnson counter
+
+module tb;
+parameter WIDTH = 4;
+
+reg clk;
+reg rstn;
+wire [WIDTH-1:0] out;
+
+JC dut (.clk(clk), .rstn(rstn), .out(out));
+
+always #10 clk = ~clk;
+
+initial begin
+  {clk, rstn} <= 0;
+
+  $monitor ("T=%0t out=%b", $time, out);
+  repeat (2) @(posedge clk);
+  rstn <= 1;
+  repeat (15) @(posedge clk);
+  $finish;
+end
+endmodule
+
+This is a testbench module for the Johnson counter you provided earlier. The testbench is designed to simulate and verify the 
+functionality of the Johnson counter (JC) module. It includes the following components:
+
+1. Parameters and signal declarations: The WIDTH parameter is set to 4, and the clk, rstn, and out signals are declared as reg 
+or wire types, respectively.
+
+2. Instantiation of the JC module: The Johnson counter module (JC) is instantiated and named as 'dut' (device under test). 
+The clk, rstn, and out signals are connected to the corresponding signals in the JC module.
+
+3. Clock generation: An always block generates a periodic clock signal with a 20-time unit period (10-time units high, 10-time 
+units low).
+
+4. Test sequence: The initial block runs a sequence to test the Johnson counter:
+   - Initialize clk and rstn to 0.
+   - Monitor the output 'out' and print its value, along with the simulation time, at each change.
+   - Wait for 2 positive clock edges, keeping the reset (rstn) active (low).
+   - Deassert the reset by setting rstn to 1.
+   - Wait for 15 positive clock edges to observe the Johnson counter's behavior.
+   - End the simulation with the $finish system task.
+
+The testbench will simulate the JC module, apply the specified inputs, and print the output at each time step. This allows you 
+to observe and verify the functionality of the Johnson counter under different conditions.
